@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.andresgarher.androiddrawer">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/cliente_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MenuRest"
+            android:label="Menu del Restaurante" />
+        <activity
+            android:name=".MenuPrincipal"
+            android:label="ClientApp" />
+        <activity
+            android:name=".Calificar"
+            android:label="Calificar Aplicacion" />
+        <activity
+            android:name=".VoiceRecognition"
+            android:label="Reconocimiento de Voz" />
+        <activity
+            android:name=".Sopas"
+            android:label="Sopas" />
+        <activity android:name=".PlatosFuertes"
+            android:label="Platos Fuertes"/>
+        <activity android:name=".bebibas"
+            android:label="Bebidas"/>
+        <activity android:name=".Postres"
+            android:label="Postres"/>
+        <activity android:name=".Ensaladas"
+            android:label="Ensaladas"/>
+        <activity android:name=".PagarCuenta" />
+    </application>
+
+</manifest>
