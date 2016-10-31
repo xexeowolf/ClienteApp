@@ -15,6 +15,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Activity que muestra la informacion almacenada en el servidor con respecto a sopas.
+ */
 public class Sopas extends AppCompatActivity {
 
     private ListView lvSopas;
@@ -23,6 +26,10 @@ public class Sopas extends AppCompatActivity {
     String[] temporal;
     String[]eleccion;
 
+    /**
+     * Constructor de la clase.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

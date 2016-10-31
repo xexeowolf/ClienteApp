@@ -43,7 +43,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-
+/**
+ * Clase encargada de obtener las elecciones del usuario y posteriormente enviarlas al servidor para ser registradas.
+ */
 public class MenuRest extends AppCompatActivity {
 
     private ListView lv1, lv2;
@@ -51,6 +53,7 @@ public class MenuRest extends AppCompatActivity {
     private int pos;
     private JSONArray arreglo = new JSONArray();
     private int numCat=3;
+    private String mesaN="";
     private int contmenu=1;
     private FloatingActionButton fbS;
     String[] menuspf,menuspg,menuspc,menuspl,menuspv;
@@ -65,6 +68,10 @@ public class MenuRest extends AppCompatActivity {
 
     ArrayAdapter<String> ad;
 
+    /**
+     * Constructor de la activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,14 +90,15 @@ public class MenuRest extends AppCompatActivity {
         Bundle extras =getIntent().getExtras();
         if(extras!=null){
             numCat=extras.getInt("categoria");
+            mesaN=extras.getString("numeromesa");
         }
 
         try {
-            new GetMenuInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/chef/menu/ensaladas"));
-            new GetMenuInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/chef/menu/sopas"));
-            new GetMenuInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/chef/menu/platos"));
-            new GetMenuInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/chef/menu/bebidas"));
-            new GetMenuInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/chef/menu/postres"));
+            new GetMenuInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/chef/menu/ensaladas"));//192.168.1.62
+            new GetMenuInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/chef/menu/sopas"));
+            new GetMenuInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/chef/menu/platos"));
+            new GetMenuInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/chef/menu/bebidas"));
+            new GetMenuInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/chef/menu/postres"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -148,6 +156,11 @@ public class MenuRest extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Metodo que envia los nombres de las recetas seleccionadas por el usuario
+     * @param v vista donde se encuentra el boton que ejecuta la accion.
+     */
     public void ejecutar(View v){
         for(int i=0; i<datosOrdenes.size(); i++){
             JSONObject objeto = new JSONObject();
@@ -159,7 +172,7 @@ public class MenuRest extends AppCompatActivity {
             }
         }
         try {
-            new EnviarDatos().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/cliente/orden"));
+            new EnviarDatos().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/cliente/orden"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -174,6 +187,13 @@ public class MenuRest extends AppCompatActivity {
         finish();
     }
 
+
+    /**
+     * Metodo que realiza distintas acciones dependiendo del resultado devuelto por una activity.
+     * @param requestCode codigo unico de cada activity
+     * @param resultCode codigo que indica si el proceso termino correctamente
+     * @param data informacion devuelta por una activity
+     */
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -263,6 +283,13 @@ public class MenuRest extends AppCompatActivity {
 
     }
 
+    /**
+     * Metodo que busca la receta seleccionada por medio de reconocimiento de voz en la base de datos del servidor.
+     * @param nombre nombre de la receta a encontrar
+     * @param arreglo lista con todas la recetas existentes.
+     * @param categoria categoria de la receta.
+     * @return true si se encuentra la receta en la base de datos, de lo contrario false.
+     */
     public boolean encontrar(String nombre,String[]arreglo,String categoria){
         for(int r=0;r<arreglo.length;r++){
             char[] infoC=arreglo[r].toCharArray();
@@ -286,6 +313,10 @@ public class MenuRest extends AppCompatActivity {
         return false;
     }
 
+
+    /**
+     * Clase encargada de enviar los datos de la seleccion de platillos del usuario en segundo plano.
+     */
     public class EnviarDatos extends AsyncTask<URL, Void, Void> {
 
         @Override
@@ -305,6 +336,7 @@ public class MenuRest extends AppCompatActivity {
 
                     total.put(numCat);
                     total.put(arreglo);
+                    total.put(mesaN);
                 con.setFixedLengthStreamingMode(total.toString().getBytes().length);
                 con.setRequestProperty("Content-Type","application/json");
 
@@ -332,6 +364,9 @@ public class MenuRest extends AppCompatActivity {
         }
     }
 
+    /**
+     * Clase que se ejecuta en segundo plano que consulta al servidor por su base de datos.
+     */
     public class GetMenuInfo extends AsyncTask<URL, Void, List<String>> {
 
 

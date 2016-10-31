@@ -10,6 +10,7 @@ import java.util.List;
 
 
 /**
+ * Clase encargada de recibir informacion en formato JSON y extraer los elementos.
  * Created by alfredo on 22/10/16.
  */
 
@@ -19,6 +20,13 @@ public class LectorJSON {
     Método encargado de coordinar la conversión final de un flujo
     con formato JSON
     */
+
+    /**
+     *
+     * @param in flujo de datos entrantes
+     * @return lista enlazada con la informacion recibida
+     * @throws IOException
+     */
     public List<String> readJsonStream(InputStream in) throws IOException {
 
 // Nueva instancia de un lector JSON
@@ -36,6 +44,13 @@ public class LectorJSON {
     /*
     Este método lee cada elemento al interior de un array JSON
     */
+
+    /**
+     * Metodo encargado de leer la informacion almacenada en el flujo de datos entrante
+     * @param reader lector de tipo JSON
+     * @return lista enlazada simple con los elementos recolectados por el lector JSON
+     * @throws IOException
+     */
     public List<String> readCommentsArray(JsonReader reader) throws IOException {
         List<String> comments = new ArrayList<>();
 
@@ -53,6 +68,14 @@ public class LectorJSON {
     /*
     Lee los atributos de cada objeto
     */
+
+    /**
+     * Metodo encargado de leer la informacion almacenada en el flujo de datos entrante
+     * @param reader lector de tipo JSON
+     * @param llave nombre de la llave sobre la cual esta almacenada la informacion en el JSONObject
+     * @return cadenas de texto con la informacion recibida.
+     * @throws IOException
+     */
     public String readMessage(JsonReader reader,String llave) throws IOException {
 
 // Cuerpo del comentario

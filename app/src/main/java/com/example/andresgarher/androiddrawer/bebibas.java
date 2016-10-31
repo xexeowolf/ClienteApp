@@ -14,6 +14,10 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+
+/**
+ * Activity que muestra la informacion almacenada en el servidor con respecto a bebidas.
+ */
 public class bebibas extends AppCompatActivity {
 
     private ListView lvBebidass;
@@ -22,6 +26,10 @@ public class bebibas extends AppCompatActivity {
     String[] temporal;
     String[] eleccion;
 
+    /**
+     * Constructor de la activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

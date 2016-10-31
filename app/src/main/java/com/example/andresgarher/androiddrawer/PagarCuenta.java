@@ -2,6 +2,7 @@ package com.example.andresgarher.androiddrawer;
 
 /**
  * Created by andres on 27/10/16.
+ * Clase que muestra los tramites para cancelar una cuenta pendiente.
  */
 
 
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 
+
+
 public class PagarCuenta extends AppCompatActivity {
 
     String[] entrada;
@@ -43,7 +46,10 @@ public class PagarCuenta extends AppCompatActivity {
     private int cuent = 1;
     private int montoCuenta = 0;
 
-
+    /**
+     * Constructor de la activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +126,6 @@ public class PagarCuenta extends AppCompatActivity {
                     adapter2.notifyDataSetChanged();
                 }
 
-                lv1.setVisibility(View.GONE);
 
                 lv2.setVisibility(View.GONE);
                 generar.setVisibility(View.GONE);
@@ -139,15 +144,20 @@ public class PagarCuenta extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                lv1.setVisibility(View.VISIBLE);
+                if(pedidos.size()>0){
+                    lv1.setVisibility(View.VISIBLE);
 
-                lv3.setVisibility(View.GONE);
-                nueva.setVisibility(View.GONE);
+                    lv3.setVisibility(View.GONE);
+                    nueva.setVisibility(View.GONE);
 
-                lv2.setVisibility(View.VISIBLE);
-                generar.setVisibility(View.VISIBLE);
-                if(pedidos.size()==0){
-                    generar.setVisibility(View.GONE);
+                    lv2.setVisibility(View.VISIBLE);
+                    generar.setVisibility(View.VISIBLE);
+                    if(pedidos.size()==0){
+                        generar.setVisibility(View.GONE);
+                    }
+
+                }else{
+                    Toast.makeText(getBaseContext(), "No tiene mas ordenes pendientes", Toast.LENGTH_LONG).show();
                 }
             }
         });

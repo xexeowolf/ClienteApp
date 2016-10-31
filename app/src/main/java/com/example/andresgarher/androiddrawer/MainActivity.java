@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Movie;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,12 +15,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONArray;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+/**
+ * Activity principal encargada de mostrar y obtener las opciones iniciales al usuario
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button botonscan;
@@ -29,7 +42,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button BotonAvanzar;
     private Spinner Categoria;
     private String[] datosCate= {"Oro", "Plata", "Bronce"};
-    int cate;
+    private int cate;
+    private String mesaN;
+
+    /**
+     * Constructor de la activity.
+     * @param savedInstanceState
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +115,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    /**
+     * Metodo que realiza distintas acciones dependiendo del resultado devuelto por una activity.
+     * @param requestCode codigo unico de cada activity
+     * @param resultCode codigo que indica si el proceso termino correctamente
+     * @param data informacion devuelta por una activity
+     */
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         numeromesa = (EditText) findViewById(R.id.NumeroMesa);
+        numeromesa.setTextColor(Color.WHITE);
         numeromesa.setInputType(1);//0 nada,1 texto,2 numeros
         guardarnumeromesa = result.getContents().toString();
         numeromesa.setText(guardarnumeromesa);
@@ -114,6 +141,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         BotonAvanzar = (Button) findViewById(R.id.BotonAvanzarMenu);
         Intent intent = new Intent(this, MenuPrincipal.class);
         intent.putExtra("categoria", cate);
+        intent.putExtra("numeromesa",String.valueOf(numeromesa.getText()));
+        mesaN=String.valueOf(numeromesa.getText());
         startActivity(intent);
     }
+
 }

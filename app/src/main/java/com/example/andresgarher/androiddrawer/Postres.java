@@ -14,6 +14,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Activity que muestra la informacion almacenada en el servidor con respecto a postres.
+ */
 public class Postres extends AppCompatActivity {
 
     private ListView lvPostres;
@@ -23,6 +26,10 @@ public class Postres extends AppCompatActivity {
     String[] eleccion;
 
 
+    /**
+     * Constructor de la clase.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

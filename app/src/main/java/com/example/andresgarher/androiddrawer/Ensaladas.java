@@ -17,6 +17,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
+/**
+ * Activity que muestra la informacion almacenada en el servidor con respecto a ensaladas.
+ */
 public class Ensaladas extends AppCompatActivity {
 
     private ListView lvBebidas;
@@ -25,6 +28,10 @@ public class Ensaladas extends AppCompatActivity {
     String[] temporal;
     String[] eleccion;
 
+    /**
+     * Constructor de la activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

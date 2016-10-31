@@ -25,6 +25,10 @@ import com.example.andresgarher.androiddrawer.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Clase encargada de realizar el reconocimiento de voz.
+ */
 public class VoiceRecognition extends AppCompatActivity {
     private final static int VOICE_RECOGNITION_REQUEST_CODE = 1001;
     private EditText metTextHint;
@@ -35,7 +39,10 @@ public class VoiceRecognition extends AppCompatActivity {
     List<String> ordenes=new ArrayList<String>();
     ArrayAdapter<String> or_ad;
 
-    //private TextView n;
+    /**
+     * Constructor de la clase.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +83,12 @@ public class VoiceRecognition extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Metodo que transforma el texto obtenido por reconocimiento de voz en un formato comparable.
+     * @param text texto obtenido por reconocimiento de voz
+     * @return texto en formato comparable.
+     */
     public String fisMayu(String text){
 
         String tex = "";
@@ -131,6 +144,14 @@ public class VoiceRecognition extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,noOfMatches);
         startActivityForResult(intent,VOICE_RECOGNITION_REQUEST_CODE);
     }
+
+    /**
+     * Metodo que realiza distintas acciones dependiendo del resultado devuelto por una activity.
+     * @param requestCode codigo unico de cada activity
+     * @param resultCode codigo que indica si el proceso termino correctamente
+     * @param data informacion devuelta por una activity
+     */
+
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         if(resultCode == RESULT_OK){

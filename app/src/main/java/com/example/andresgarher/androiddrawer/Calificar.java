@@ -23,6 +23,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity que muestra la calificacion dada por el usuario.
+ */
 public class Calificar extends AppCompatActivity {
 
     private static Button button_sbm;
@@ -33,6 +36,10 @@ public class Calificar extends AppCompatActivity {
     private JSONArray arreglo = new JSONArray();
     List<String> datosCalificar = new ArrayList<String>();
 
+    /**
+     * Constructor de la activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +87,11 @@ public class Calificar extends AppCompatActivity {
         );
     }
 
+
+    /**
+     * Metodo que envia los comentarios y la nota al servidor par aser almacenados.
+     * @param v
+     */
     public void ejecutarEnviar(View v){
         for(int i=0; i<datosCalificar.size(); i++){
             JSONObject objeto = new JSONObject();
@@ -93,7 +105,7 @@ public class Calificar extends AppCompatActivity {
         }
 
         try {
-            new EnviarDatos().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/cliente/nota"));
+            new EnviarDatos().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/cliente/nota"));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -101,7 +113,9 @@ public class Calificar extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Clase encargada de realizar el envia de datos al servidor.
+     */
     public class EnviarDatos extends AsyncTask<URL, Void, Void> {
 
         @Override

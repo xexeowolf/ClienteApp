@@ -20,16 +20,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * Activity que contiene todas las funcionalidades principales de la aplicacion.
+ */
+
 public class MenuPrincipal extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ActionBarDrawerToggle toggle;
-    private TextView tvtot,tvpog;
+    private TextView tvtot,tvpog,tvmsj;
     private String[] ordenesTotal;
 
     public ListView lista_progreso;
@@ -39,8 +46,14 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
     private final int interval = 3000; // 1 Second
     private Handler handler = new Handler();
     private Runnable runnable;
+    private String mesaN="";
+    private boolean unaVez=true;
+    private int factor=0;
 
-
+    /**
+     *Constructor de la activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +62,7 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        ordenesTotal=new String[0];
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -60,38 +74,36 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
         lista_progreso.setVisibility(View.GONE);
         tvtot=(TextView)findViewById(R.id.tvtot);
         tvpog=(TextView)findViewById(R.id.tvpog);
+        tvmsj=(TextView)findViewById(R.id.tvmsj);
         tvpog.setTextColor(Color.BLACK);
         tvtot.setTextColor(Color.BLACK);
         tvtot.setVisibility(View.GONE);
         tvpog.setVisibility(View.GONE);
+        tvmsj.setVisibility(View.GONE);
+
+        Bundle ext=getIntent().getExtras();
+        if(ext!=null){
+            mesaN=ext.getString("numeromesa");
+        }
         runnable= new Runnable(){
             public void run() {
                 try {
-                    new GetMesaInfo().execute(new URL("http://192.168.1.62:9080/Proyecto2/central/cliente/progreso"));
-                    //Toast.makeText(getBaseContext(), String.valueOf(contDS)+" segundos", Toast.LENGTH_LONG).show();
+                    new GetMesaInfo().execute(new URL("http://192.168.43.116:9080/Proyecto2/central/cliente/progreso"));
                     handler.postDelayed(runnable,interval);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
-        //handler.post(runnable);
     }
 
 
-    public String[] unirArreglos(String[] first,String[] second){
-        String[] ambos=new String[first.length+second.length];
-        for(int i=0;i<first.length;i++){
-            ambos[i]=first[i];
-        }
-        for(int j=0;j<second.length;j++){
-            ambos[j+first.length]=second[j];
-        }
-
-        return ambos;
-    }
-
-
+    /**
+     * Metodo que realiza distintas acciones dependiendo del resultado devuelto por una activity.
+     * @param requestCode codigo unico de cada activity
+     * @param resultCode codigo que indica si el proceso termino correctamente
+     * @param data informacion devuelta por una activity
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -99,7 +111,7 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
             case (710): {
                 if (resultCode == Activity.RESULT_OK) {
 
-                    if(ordenesTotal==null){
+                    if(ordenesTotal.length==0){
                         optativo=data.getStringArrayExtra("orden");
                         ordenesTotal=optativo.clone();
                         for(int u=0;u<optativo.length;u++){
@@ -126,7 +138,10 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
                     barraprogreso.setVisibility(View.VISIBLE);
                     tvtot.setVisibility(View.VISIBLE);
                     tvpog.setVisibility(View.VISIBLE);
-
+                    if(barraprogreso.getProgress()>=100){
+                        barraprogreso.setProgress(0);
+                        //handler.post(runnable);
+                    }
                 }
                 break;
             }
@@ -140,12 +155,35 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
                     barraprogreso.setVisibility(View.GONE);
                     tvtot.setVisibility(View.GONE);
                     tvpog.setVisibility(View.GONE);
+                    tvmsj.setVisibility(View.GONE);
                 }
             break;}
         }
     }
 
+    /**
+     *Metodo encargado de unir los elementos de dos arreglos en un arreglo.
+     * @param first primer arreglo a unir
+     * @param second segundo arreglo a unir
+     * @return un arreglo con la informacion de ambos arreglos
+     */
+    public String[] unirArreglos(String[] first,String[] second){
+        String[] ambos=new String[first.length+second.length];
+        for(int i=0;i<first.length;i++){
+            ambos[i]=first[i];
+        }
+        for(int j=0;j<second.length;j++){
+            ambos[j+first.length]=second[j];
+        }
 
+        return ambos;
+    }
+
+    /**
+     *Metodo que realiza una accion al oprimir una opcion(item) del menu
+     * @param item opcion seleccionada
+     * @return accion relacionada al item
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -155,10 +193,17 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
 
     }
 
+    /**
+     * Metodo encargado de realizar acciones dependiendo del item seleccionado en el menu de navegacion
+     * @param item opcion seleccionada en el menu
+     * @return accion relacionada al item.
+     */
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_menu_1) {
+            factor=ordenesTotal.length;
+            tvmsj.setVisibility(View.GONE);
             Intent intento=new Intent(this, MenuRest.class);
             int i=1;
             Bundle extras =getIntent().getExtras();
@@ -166,12 +211,18 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
                 i=extras.getInt("categoria");
             }
             intento.putExtra("categoria",i);
+            intento.putExtra("numeromesa",mesaN);
             startActivityForResult(intento,710);
 
 
         }else if (id == R.id.nav_menu_3) {
-            handler.removeCallbacks(runnable);
+            //handler.removeCallbacks(runnable);
+            handler.post(runnable);
+            Toast.makeText(getBaseContext(), "Ver barra de progreso", Toast.LENGTH_LONG).show();
+
         } else if (id == R.id.nav_menu_4) {
+            handler.removeCallbacks(runnable);
+            barraprogreso.setProgress(0);
             Intent intentoP=new Intent(this,PagarCuenta.class);
             if(ordenesTotal==null){
                 ordenesTotal=new String[0];
@@ -181,49 +232,92 @@ public class MenuPrincipal extends AppCompatActivity implements NavigationView.O
 
         } else if (id == R.id.nav_menu_5){
             startActivity(new Intent(this, Calificar.class));
-
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /**
+     *Clase encargada de obtener la informacion relacionada con el numero de mesa registrado del servidor.
+     */
+
     public class GetMesaInfo extends AsyncTask<URL, Void, List<String>> {
 
+            @Override
+            protected List<String> doInBackground(URL... urls) {
+                // Obtener la conexión
+                HttpURLConnection con = null;
 
-
-        @Override
-        protected List<String> doInBackground(URL... urls) {
-
-            List<String> msj = null;
-
-            try {
-                HttpURLConnection urlConnection = (HttpURLConnection) urls[0].openConnection();
                 try {
-                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                    InputStreamReader j=new InputStreamReader(in,"UTF-8");
-                    LectorJSON parser = new LectorJSON();
 
-                    msj = parser.readJsonStream(in);
+                    con = (HttpURLConnection) urls[0].openConnection();
 
-                } finally {
-                    urlConnection.disconnect();
+                    // Activar método POST
+                    con.setDoOutput(true);
+
+                    con.setFixedLengthStreamingMode(mesaN.getBytes().length);
+                    con.setRequestProperty("Content-Type", "application/json");
+
+                    OutputStream out = new BufferedOutputStream(con.getOutputStream());
+
+                    out.write(mesaN.getBytes());
+                    out.flush();
+                    out.close();
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
+
+                List<String> msj = null;
+
+                try {
+                    //con = (HttpURLConnection) urls[0].openConnection();
+                    try {
+                        InputStream in = new BufferedInputStream(con.getInputStream());
+                        InputStreamReader j = new InputStreamReader(in, "UTF-8");
+                        LectorJSON parser = new LectorJSON();
+
+                        msj = parser.readJsonStream(in);
+
+                    } finally {
+                        con.disconnect();
+                    }
+                } catch (Exception e) {
 
 
+                }
+                return msj;
             }
-            return msj;
 
-        }
-
+        /**
+         *  Metodo que muestra el progreso de una orden en tiempo real.
+         * @param coleccion lista enlazada con la informacion necesaria para procesar y comparar.
+         */
         @Override
         protected void onPostExecute(List<String> coleccion){
-            //int f=Integer.parseInt(coleccion.get(0));
-            Toast.makeText(getBaseContext(), String.valueOf(coleccion.size()), Toast.LENGTH_LONG).show();
-            if(barraprogreso.getProgress()<100){
-                barraprogreso.setProgress(barraprogreso.getProgress()+100/20);
+            int f=Integer.parseInt(coleccion.get(0));
+            if(f!=0){
+                f--;
             }else{
+                if(factor==ordenesTotal.length){
+                    barraprogreso.setProgress(barraprogreso.getProgress()+100/ordenesTotal.length);
+                }
+            }
+            if(barraprogreso.getProgress()==0){
+                int tempF=factor;
+                while(f<(f+factor)){
+                barraprogreso.setProgress(barraprogreso.getProgress()+100/ordenesTotal.length);
+                factor--;}
+                factor=tempF;
+            }
+            if(ordenesTotal.length>0 && barraprogreso.getProgress()<100 && (f+factor)<ordenesTotal.length){
+                barraprogreso.setProgress(barraprogreso.getProgress()+100/ordenesTotal.length);
+                factor++;
+
+            }else if(barraprogreso.getProgress()>=100){
+                tvmsj.setVisibility(View.VISIBLE);
                 handler.removeCallbacks(runnable);
             }
         }

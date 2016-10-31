@@ -43,6 +43,14 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+        <TextView
+            android:text="Su orden esta lista!!"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvmsj"
+            android:gravity="center"
+            android:textSize="20dp"/>
+
 
     </LinearLayout>
 
